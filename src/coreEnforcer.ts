@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { compile } from 'expression-eval';
+import { compileAsync } from 'expression-eval';
 import * as _ from 'lodash';
 
 import { DefaultEffector, Effect, Effector } from './effect';
@@ -258,7 +258,7 @@ export class CoreEnforcer {
    *              of strings, can be class instances if ABAC is used.
    * @return whether to allow the request.
    */
-  public enforce(...rvals: any[]): boolean {
+  public async enforce(...rvals: any[]): Promise<boolean> {
     if (!this.enabled) {
       return true;
     }
@@ -282,7 +282,7 @@ export class CoreEnforcer {
       throw new Error('model is undefined');
     }
 
-    const expression = compile(expString);
+    const expression = compileAsync(expString);
 
     let policyEffects: Effect[];
     let matcherResults: number[];
@@ -308,7 +308,7 @@ export class CoreEnforcer {
           parameters[token] = pvals[j];
         });
 
-        const result = expression({ ...parameters, ...functions });
+        const result = await expression({ ...parameters, ...functions });
 
         switch (typeof result) {
           case 'boolean':
@@ -361,7 +361,7 @@ export class CoreEnforcer {
         parameters[token] = '';
       });
 
-      const result = expression({ ...parameters, ...functions });
+      const result = await expression({ ...parameters, ...functions });
       // logPrint(`Result: ${result}`);
 
       if (result) {

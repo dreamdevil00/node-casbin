@@ -34,11 +34,11 @@ test('test logPrint', () => {
   expect(logPrint('test log')).toBeUndefined();
 });
 
-test('test Valuate', () => {
+test('test Valuate', async () => {
   // @ts-ignore
-  expect(compile('1 + 1 === 2')()).toEqual(true);
+  expect(await compile('1 + 1 === 2')()).toEqual(true);
   // @ts-ignore
-  expect(compile('1 + 1 !== 2')()).toEqual(false);
+  expect(await compile('1 + 1 !== 2')()).toEqual(false);
 });
 
 test('test regexMatchFunc', () => {
